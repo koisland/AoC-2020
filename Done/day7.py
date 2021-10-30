@@ -1,6 +1,26 @@
 import re
 import pprint
 
+def count_total_bags (total_bags, bags):
+  """
+  Iterative function to find total bags inside a provided list of bags.
+  :param total_bags - list of bag names
+  :param bags - dict of dict containing all bags:
+  """
+  initial_bags = len(total_bags)
+  for bag in total_bags:
+    inn_bags = bags.get(bag)
+    if inn_bags is None:
+      continue
+    for inn_bag, num in inn_bags.items():
+      if inn_bag == "other":
+        continue
+      # append number of bags while in loop. 
+      # allows to continue in a single loop until all bags are checked
+      total_bags += [inn_bag] * int(num)
+  return(len(total_bags) - initial_bags)
+
+
 def contains_bag(bag, bags, bags_color, des_color):
   """
   Recursive function to find if a bag contains a bag with a desired color
@@ -52,20 +72,25 @@ def main():
       # print(f"{col_only_line=}\n")
       bag_dict[col_only_line[0]] = {num_color.split(" ", 1)[1]: num_color.split(" ", 1)[0] for num_color in col_only_line[1:]}
 
-  # pprint.pprint(bag_dict) 
- 
+  # pprint.pprint(bag_dict)
+  
+  # DAY 1:
+  # bags_w_color = set()
+  # for bag in bag_dict:
+  #   print(f"{bag=}")
+  #   has_color, bags_w_color = contains_bag(bag, bag_dict, bags_w_color, DES_COLOR)
+  #   if has_color:
+  #     print(f"\tBag found in {bag}.")
+  #     bags_w_color.add(bag)
 
-  bags_w_color = set()
-  for bag in bag_dict:
-    print(f"{bag=}")
-    has_color, bags_w_color = contains_bag(bag, bag_dict, bags_w_color, DES_COLOR)
-    if has_color:
-      print(f"\tBag found in {bag}.")
-      bags_w_color.add(bag)
+  # # remove shiny gold from set
+  # assert(DES_COLOR in bags_w_color)
+  # bags_w_color.remove(DES_COLOR)
+  # print(f"Total bags ({len(bag_dict)}) that have '{DES_COLOR}': {len(bags_w_color)}")
 
-  # remove shiny gold from set
-  assert(DES_COLOR in bags_w_color)
-  bags_w_color.remove(DES_COLOR)
-  print(f"Total bags ({len(bag_dict)}) that have '{DES_COLOR}': {len(bags_w_color)}")
+  # DAY 2:
+  total_inn_bags = [DES_COLOR]
+  num_inn_bags = count_total_bags(total_inn_bags, bag_dict)
+  print(num_inn_bags)
 
 main()
